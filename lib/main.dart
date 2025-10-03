@@ -10,12 +10,10 @@ import 'utils/firebase_helper.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Listen to network changes and sync offline score
   Connectivity().onConnectivityChanged.listen((status) async {
     final user = FirebaseAuth.instance.currentUser;
     if (status != ConnectivityResult.none && user != null) {

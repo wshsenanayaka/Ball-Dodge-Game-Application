@@ -22,7 +22,6 @@ class Ball extends CircleComponent
   void update(double dt) {
     super.update(dt);
 
-    // Move the ball downwards
     position.y += speed * dt;
 
     // Remove ball if it goes out of screen

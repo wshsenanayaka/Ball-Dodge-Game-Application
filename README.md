@@ -1,16 +1,24 @@
-# my_game
+Ball Dodge Game 🎮
 
-A new Flutter project.
+Ball Dodge Game is a mobile game built using Flutter and Flame Game Engine with Firebase integration. Players dodge falling balls while scoring points, with their progress stored in Firebase. The application includes user authentication, a player profile, and offline capabilities.
 
-## Getting Started
+Overview
 
-This project is a starting point for a Flutter application.
+Ball Dodge Game challenges the player to avoid falling balls while accumulating points. It includes:
+User authentication via Firebase (Login / Register)
+Player profile with score tracking
+Dynamic gameplay with increasing difficulty
+Online/offline data synchronization
+The game is suitable for both learning Flutter and demonstrating mobile game design principles.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Architecture & Design
+Major Design Decisions
+Flutter + Flame for rapid cross-platform development.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Firebase for authentication, Firestore for storing user scores.
+State Management via ValueNotifier for reactive UI updates.
+Data Flow & Interaction
+UI Layer: Screens (LoginPage, RegisterPage, GameScreen, ProfilePage)
+Game Layer: BallDodgeGame handles gameplay, player movement, ball generation, and scoring.
+Data Layer: FirebaseHelper manages CRUD operations for user scores.

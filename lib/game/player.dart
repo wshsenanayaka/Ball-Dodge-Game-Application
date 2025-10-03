@@ -11,16 +11,13 @@ class Player extends RectangleComponent
           size: Vector2(w, h),
           paint: Paint()..color = Colors.greenAccent,
         ) {
-    // Add collision hitbox
     add(RectangleHitbox());
   }
 
-  // Move the player to the left, ensuring it doesn't go out of bounds
   void moveLeft(double distance) {
     position.x = (position.x - distance).clamp(0, gameRef.size.x - size.x);
   }
 
-  // Move the player to the right, ensuring it doesn't go out of bounds
   void moveRight(double distance) {
     position.x = (position.x + distance).clamp(0, gameRef.size.x - size.x);
   }

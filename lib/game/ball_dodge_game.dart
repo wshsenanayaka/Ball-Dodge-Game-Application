@@ -14,26 +14,22 @@ class BallDodgeGame extends FlameGame with HasCollisionDetection, TapDetector {
   double spawnTimer = 0;
   final Random random = Random();
 
-  // External callback assigned by screen to react to Game Over
   void Function()? onGameOver;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Fixed resolution viewport
     camera.viewport = FixedResolutionViewport(
       resolution: Vector2(400, 700),
     );
 
-    // Background
     add(RectangleComponent(
       position: Vector2.zero(),
       size: Vector2(400, 700),
       paint: Paint()..color = Colors.black,
     ));
 
-    // Player
     player = Player(180, 650, 40, 20);
     add(player);
   }
@@ -49,7 +45,6 @@ class BallDodgeGame extends FlameGame with HasCollisionDetection, TapDetector {
       add(Ball(x, -20, 20));
     }
 
-    // increment score based on time
     score += (dt * 10).toInt();
     scoreNotifier.value = score;
   }
@@ -72,7 +67,6 @@ class BallDodgeGame extends FlameGame with HasCollisionDetection, TapDetector {
     }
   }
 
-  // Called by collision to handle game over logic
   void gameOver() {
     pauseEngine();
     if (onGameOver != null) {

@@ -22,18 +22,14 @@ class _GameScreenState extends State<GameScreen> {
     super.initState();
     game = BallDodgeGame();
 
-    // Called when the game detects a game over
     game.onGameOver = () async {
       if (currentUser != null) {
-        int finalScore = game.score; // Ensure score is int
+        int finalScore = game.score; 
 
-        // Update user score in Firestore
         await FirebaseHelper.updateUserScore(currentUser!.uid, finalScore);
 
-        // Sync score if needed
         await FirebaseHelper.syncScore(currentUser!.uid);
 
-        // Show overlay
         game.overlays.add('GameOver');
       }
     };
@@ -103,7 +99,6 @@ class _GameScreenState extends State<GameScreen> {
             },
           ),
 
-          // Top controls: score and profile
           Positioned(
             top: 40,
             left: 16,
@@ -137,7 +132,7 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
 
-          // Left control
+          // Left
           Positioned(
             bottom: 30,
             left: 20,
@@ -149,7 +144,7 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
 
-          // Right control
+          // Right
           Positioned(
             bottom: 30,
             right: 20,
@@ -161,7 +156,6 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
 
-          // Pause/Resume toggle
           Positioned(
             bottom: 30,
             left: MediaQuery.of(context).size.width / 2 - 50,
