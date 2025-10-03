@@ -1,0 +1,24 @@
+name: your_app_name
+description: A new Flutter project.
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+audioplayers: ^1.0.1
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: ^1.8.2
+  firebase_core: ^2.22.0
+  firebase_auth: ^4.18.0
+  cloud_firestore: ^4.8.0
+  shared_preferences: ^2.1.1
+  connectivity_plus: ^4.0.2
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/player.png
+    - assets/images/ball.png
+    - assets/images/shield.png
