@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseHelper {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Creates a new user document in Firestore with full name, email, and initial score = 0
+  //Insert
   static Future<void> createUserData(
       String uid, String email, String firstName, String lastName) async {
     await _firestore.collection('users').doc(uid).set({
@@ -16,15 +17,7 @@ class FirebaseHelper {
     });
   }
 
-  /// Updates the user score in Firestore
-  static Future<void> updateUserScore(String uid, int score) async {
-    await _firestore.collection('users').doc(uid).update({
-      'score': score,
-      'updated_at': FieldValue.serverTimestamp(),
-    });
-  }
-
-  /// Fetches the user score from Firestore
+  /// Fetches data
   static Future<int> getUserScore(String uid) async {
     final doc = await _firestore.collection('users').doc(uid).get();
     if (doc.exists && doc.data() != null && doc.data()!['score'] is int) {
@@ -33,12 +26,61 @@ class FirebaseHelper {
     return 0;
   }
 
-  /// Syncs the user score if online (placeholder for any additional logic)
-  static Future<void> syncScore(String uid) async {
+  /// Update user score
+  static Future<void> updateUserScore(String uid, int sessionScore) async {
+    final userDoc = _firestore.collection('users').doc(uid);
+
+    await _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(userDoc);
+      if (!snapshot.exists) {
+        transaction.set(userDoc, {
+          'score': sessionScore,
+          'updated_at': FieldValue.serverTimestamp(),
+        });
+      } else {
+        final currentScore = snapshot.get('score') ?? 0;
+        transaction.update(userDoc, {
+          'score': currentScore + sessionScore,
+          'updated_at': FieldValue.serverTimestamp(),
+        });
+      }
+    });
+  }
+
+  /// Sync score with online/offline
+  static Future<void> syncScore(String uid, int sessionScore) async {
     final connectivity = await Connectivity().checkConnectivity();
+    final prefs = await SharedPreferences.getInstance();
+
     if (connectivity != ConnectivityResult.none) {
-      // You can implement additional logic here if needed
-      // For example, syncing local score to Firestore
+      // Online: fetch localScore
+      final localScore = prefs.getInt('local_score') ?? 0;
+
+      if (localScore > 0) {
+        final userDoc = _firestore.collection('users').doc(uid);
+        await _firestore.runTransaction((transaction) async {
+          final snapshot = await transaction.get(userDoc);
+          if (!snapshot.exists) {
+            transaction.set(userDoc, {
+              'score': localScore,
+              'updated_at': FieldValue.serverTimestamp(),
+            });
+          } else {
+            final currentScore = snapshot.get('score') ?? 0;
+            transaction.update(userDoc, {
+              'score': currentScore + localScore,
+              'updated_at': FieldValue.serverTimestamp(),
+            });
+          }
+        });
+
+        // Clear
+        await prefs.setInt('local_score', 0);
+      }
+    } else {
+      // Offline sync later
+      final storedScore = prefs.getInt('local_score') ?? 0;
+      await prefs.setInt('local_score', storedScore + sessionScore);
     }
   }
 

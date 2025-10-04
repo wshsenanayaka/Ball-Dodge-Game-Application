@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/firebase_helper.dart';
 import 'login_page.dart';
+import 'game_screen.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -100,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    // Score Display
+                    // Score
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 40, vertical: 20),
@@ -151,6 +152,31 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    // Play Game Button
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const GameScreen()),
+                        );
+                      },
+                      icon: const Icon(Icons.play_arrow, color: Colors.white),
+                      label: const Text(
+                        'Play Game',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orangeAccent,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../utils/firebase_helper.dart';
 import 'game_screen.dart';
 import 'register_page.dart';
 
@@ -78,9 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 30),
                         loading
-                            ? const CircularProgressIndicator(
-                                color: Colors.orangeAccent,
-                              )
+                            ? const CircularProgressIndicator(color: Colors.orangeAccent)
                             : SizedBox(
                                 width: double.infinity,
                                 height: 50,
@@ -88,27 +85,20 @@ class _LoginPageState extends State<LoginPage> {
                                   onPressed: () async {
                                     if (!_formKey.currentState!.validate())
                                       return;
-
                                     setState(() => loading = true);
+
                                     try {
                                       final userCredential = await FirebaseAuth
                                           .instance
                                           .signInWithEmailAndPassword(
                                               email: emailController.text.trim(),
-                                              password:
-                                                  passwordController.text.trim());
-
+                                              password: passwordController.text.trim());
                                       final user = FirebaseAuth.instance.currentUser;
                                       if (user != null) {
-                                        await FirebaseHelper.syncScore(user.uid);
-
-                                        if (mounted) {
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      const GameScreen()));
-                                        }
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (_) => const GameScreen()),
+                                        );
                                       }
                                     } on FirebaseAuthException catch (e) {
                                       ScaffoldMessenger.of(context).showSnackBar(
@@ -123,8 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   child: const Text(
                                     'Login',
-                                    style: TextStyle(
-                                        fontSize: 18, fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
@@ -133,8 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(
-                                  builder: (_) => const RegisterPage()),
+                              MaterialPageRoute(builder: (_) => const RegisterPage()),
                             );
                           },
                           child: const Text(

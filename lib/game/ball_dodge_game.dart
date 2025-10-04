@@ -12,6 +12,7 @@ class BallDodgeGame extends FlameGame with HasCollisionDetection, TapDetector {
   final ValueNotifier<int> scoreNotifier = ValueNotifier<int>(0);
   int score = 0;
   double spawnTimer = 0;
+  double scoreTimer = 0.0;
   final Random random = Random();
 
   void Function()? onGameOver;
@@ -34,21 +35,41 @@ class BallDodgeGame extends FlameGame with HasCollisionDetection, TapDetector {
     add(player);
   }
 
+  //@override
+  // void update(double dt) {
+  //   super.update(dt);
+
+  //   spawnTimer += dt;
+  //   if (spawnTimer > 1.0 && size.x > 0) {
+  //     spawnTimer = 0;
+  //     final x = (size.x - 20) * random.nextDouble();
+  //     add(Ball(x, -20, 20));
+  //   }
+
+  //   score += (dt * 10).toInt();
+  //   scoreNotifier.value = score;
+  // }
+
   @override
   void update(double dt) {
     super.update(dt);
 
+    // Spawn balls every second
     spawnTimer += dt;
     if (spawnTimer > 1.0 && size.x > 0) {
       spawnTimer = 0;
       final x = (size.x - 20) * random.nextDouble();
-      add(Ball(x, -20, 20));
+      add(Ball(x, -20, 20)); // Correct usage
     }
 
-    score += (dt * 10).toInt();
-    scoreNotifier.value = score;
+    scoreTimer += dt;
+    if (scoreTimer >= 5.0) {
+      score += 1; // +1 per 5 seconds
+      scoreNotifier.value = score;
+      scoreTimer = 0.0; // reset timer
+    }
   }
-
+    
   void reset() {
     children.whereType<Ball>().forEach((ball) => ball.removeFromParent());
     player.position = Vector2(180, 650);

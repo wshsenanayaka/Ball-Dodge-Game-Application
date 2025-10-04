@@ -28,7 +28,7 @@ class _GameScreenState extends State<GameScreen> {
 
         await FirebaseHelper.updateUserScore(currentUser!.uid, finalScore);
 
-        await FirebaseHelper.syncScore(currentUser!.uid);
+        await FirebaseHelper.syncScore(currentUser!.uid, game.score);
 
         game.overlays.add('GameOver');
       }
